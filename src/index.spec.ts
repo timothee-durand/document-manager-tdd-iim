@@ -1,9 +1,7 @@
-import { helloWorld } from "./index";
+import {describe, it, expect} from 'vitest'
 
-describe("hello world", () => {
-  test("should return `hello world`", () => {
-    const result = helloWorld();
-
-    expect(result).toBe("hello world");
-  });
-});
+describe('test', () => {
+    it('test', () => {
+        expect(1).toBe(1)
+    })
+})

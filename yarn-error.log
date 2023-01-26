@@ -1,0 +1,36 @@
+Arguments: 
+  /Users/timothee/.nvm/versions/node/v17.0.0/bin/node /Users/timothee/.node/corepack/yarn/1.22.15/bin/yarn.js init
+
+PATH: 
+  /Users/timothee/.local/share/fig/plugins/git-open:/Users/timothee/Library/pnpm:/Users/timothee/.nvm/versions/node/v17.0.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/timothee/.local/share/fig/plugins/git-open:/Users/timothee/Library/pnpm:/Users/timothee/.nvm/versions/node/v17.0.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/timothee/.cargo/bin:/Users/timothee/.fig/bin:/Users/timothee/.local/bin:/Users/timothee/Library/Application Support/JetBrains/Toolbox/scripts:/Users/timothee/CODE/flutter/bin:/Users/timothee/Library/Application Support/JetBrains/Toolbox/scripts:/Users/timothee/CODE/flutter/bin
+
+Yarn version: 
+  1.22.15
+
+Node version: 
+  17.0.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/Users/timothee/.node/corepack/yarn/1.22.15/lib/cli.js:137145:13)
+      at Interface.emit (node:events:390:28)
+      at Interface.[_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:973:18)
+      at ReadStream.onkeypress (node:internal/readline/interface:240:20)
+      at ReadStream.emit (node:events:390:28)
+      at emitKeys (node:internal/readline/utils:358:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+      at ReadStream.emit (node:events:390:28)
+      at addChunk (node:internal/streams/readable:324:12)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
