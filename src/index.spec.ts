@@ -34,9 +34,7 @@ describe('Document Manager', () => {
         })
 
         it('should return "/\n\tfolder1\n\t\tfile1" if there is a file named "file1" in root/folder1', () => {
-            const folder1 = new Folder("folder1");
-            folder1.addChild(new TextFile("file1", ""))
-            documentManager.addChild("/", folder1);
+            documentManager = getDocumentManagerWithFolderAndFile()
             expect(documentManager.toString("/")).toBe("/\n\tfolder1\n\t\tfile1")
         })
     })
@@ -49,7 +47,7 @@ describe('Document Manager', () => {
             documentManager = new DocumentManager(root);
         })
 
-        it('should return a TextFile with name "file1" and content "content" if i get child "file1"', () => {
+        it('should return a TextFile with name "file1"', () => {
             expect(documentManager.getChild("/file1")).toStrictEqual(new TextFile("file1", "content"))
         })
 
@@ -81,7 +79,7 @@ describe('Document Manager', () => {
     })
 
     describe('Append', () => {
-        it('should return "Path is not valid" ', () => {
+        it('should return "File not found" ', () => {
             function fn() {
                 const fileTest = new TextFile("testFile")
                 documentManager.addChild("wrongPath", fileTest)
@@ -89,17 +87,18 @@ describe('Document Manager', () => {
             expect(fn).toThrow("File not found");
         })
 
-        it('should return "/testFile" ', () => {
+        it('should return "Folder("root", [new TextFile("testFile"  , "")])" ', () => {
             const fileTest = new TextFile("testFile")
             const root = new Folder("root", [new TextFile("testFile"  , "")]);
             documentManager.addChild("/", fileTest)
             expect(documentManager.getChild("/")).toStrictEqual(root);
         })
 
-        it('should return "root/testFile" ', () => {
+        it('should return "Folder("folderTest", [new TextFile("testFile"  , "")])" ', () => {
             const folderTest = new Folder("folderTest")
             const fileTest = new TextFile("testFile")
             const root = new Folder("folderTest", [new TextFile("testFile"  , "")]);
+
             documentManager.addChild("/", folderTest)
             documentManager.addChild("/folderTest", fileTest)
             
@@ -142,6 +141,7 @@ describe('Document Manager', () => {
             expect(fn).toThrow("Child not found")
         })
     })
+    
     describe('Duplicate', () => {
         it('should return "Path is not valid" ', () => {
             function fn() {
@@ -155,10 +155,10 @@ describe('Document Manager', () => {
             let root = new Folder("root", [new TextFile("filetest", "content"), new TextFile("filetest-copie", "content")]);
             expect(documentManager.getChild("/")).toStrictEqual(root);
         })
-        it('should return the root folder with 2 identicals folder "folderTest" and "folderTest-copie" with same children', () => {
-            documentManager.addChild("/", new Folder("folderTest", [new TextFile("filetest", "content")]))
-            documentManager.duplicate("/folderTest")
-            let root = new Folder("root", [new Folder("folderTest", [new TextFile("filetest", "content")]), new Folder("folderTest-copie", [new TextFile("filetest", "content")])]);
+        it('should return the root folder with 2 identicals folder "folder1" and "folder1-copie" with same children', () => {
+            documentManager = getDocumentManagerWithFolderAndFile()
+            documentManager.duplicate("/folder1")
+            let root = new Folder("root", [new Folder("folder1", [new TextFile("file1", "content")]), new Folder("folder1-copie", [new TextFile("file1", "content")])]);
             expect(documentManager.getChild("/")).toStrictEqual(root);
         })
     })
@@ -168,17 +168,14 @@ describe('Document Manager', () => {
             documentManager = getDocumentManagerWithFolderAndFile()
             const folder2 = new Folder("folder2")
             documentManager.addChild('', folder2)
-            
             documentManager.move("folder1/file1", "folder2")
-            
             const file1 = new TextFile("file1", "content")
             expect(documentManager.getChild("folder2/file1")).toStrictEqual(file1)
         })
         it("should throw an error when the new folder path is not a directory", () => {
             function fn() {
-                const root = new Folder("root")
-                root.addChild(new TextFile("file1", 'content'))
-                root.addChild(new TextFile("file2", 'content'))
+                const root = new Folder("root", [new TextFile("file1", 'content'), new TextFile("file2", 'content')])
+
                 const manager = new DocumentManager(root)
                 manager.move("/file1", '/file2')
             }
