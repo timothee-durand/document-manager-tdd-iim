@@ -160,7 +160,7 @@ export class DocumentManager {
         return result
     }
 
-    extractFolderPath(path: string) : string {
+    private extractFolderPath(path: string) : string {
         return path.slice(0, path.lastIndexOf("/"));
     }
 }
