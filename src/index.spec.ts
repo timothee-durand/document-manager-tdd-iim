@@ -12,18 +12,32 @@ function getDocumentManagerWithFolderAndFile() : DocumentManager {
 describe('Document Manager', () => {
     let documentManager : DocumentManager;
     beforeEach(() => {
-        documentManager = new DocumentManager(); // tu bosses toujours cécile ?
+        documentManager = new DocumentManager();
     })
 
     describe('List ', ()=> {   
          beforeEach(() => {
-            const root = new Folder("root");
-            const fileTest = new TextFile("testFile")
-            root.addChild(new TextFile("file1", "content"));
-            documentManager = new DocumentManager(root);
+            documentManager = new DocumentManager();
         })
-        it('should return ["testFile"] if there is a file named testFile', () => {
-            expect(documentManager.getChild("")).toStrictEqual(["testFile"])
+        it('should return "/" if there is no file in root', () => {
+            expect(documentManager.toString("/")).toBe("/")
+        })
+
+        it('should return the file name if the path is a file', () => {
+            documentManager.addChild("/", new TextFile("file1", ""))
+            expect(documentManager.toString("/file1")).toBe("file1")
+        })
+
+        it('should return "/\n\tfile1" if there is a file named "file1" in root', () => {
+            documentManager.addChild("/", new TextFile("file1", ""))
+            expect(documentManager.toString("/")).toBe("/\n\tfile1")
+        })
+
+        it('should return "/\n\tfolder1\n\t\tfile1" if there is a file named "file1" in root/folder1', () => {
+            const folder1 = new Folder("folder1");
+            folder1.addChild(new TextFile("file1", ""))
+            documentManager.addChild("/", folder1);
+            expect(documentManager.toString("/")).toBe("/\n\tfolder1\n\t\tfile1")
         })
     })
 
@@ -136,10 +150,15 @@ describe('Document Manager', () => {
             expect(fn).toThrow("File not found");
         })
         it('should return the root folder with 2 identicals files "filetest" and "filetest-copie', () => {
-            
             documentManager.addChild("/", new TextFile("filetest", "content"))
             documentManager.duplicate("/filetest")
             let root = new Folder("root", [new TextFile("filetest", "content"), new TextFile("filetest-copie", "content")]);
+            expect(documentManager.getChild("/")).toStrictEqual(root);
+        })
+        it('should return the root folder with 2 identicals folder "folderTest" and "folderTest-copie" with same children', () => {
+            documentManager.addChild("/", new Folder("folderTest", [new TextFile("filetest", "content")]))
+            documentManager.duplicate("/folderTest")
+            let root = new Folder("root", [new Folder("folderTest", [new TextFile("filetest", "content")]), new Folder("folderTest-copie", [new TextFile("filetest", "content")])]);
             expect(documentManager.getChild("/")).toStrictEqual(root);
         })
     })
