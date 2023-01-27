@@ -1,24 +1,27 @@
 # Document Manager TDD
 
-Members :
+## Members
 - Timothée DURAND
 - Piero NERI
 - Cécile DENONCIN
 
-
-## CONSIGNES
-[here](https://github.com/gmevelec/IIM-25-01-2023/blob/main/d01/rendu/SUBJECT.md)
+## SETUP
+Install dependencies :
+```
+yarn 
+```
+Launch tests :
+````
+yarn test
+````
+See coverage
+````
+yarn coverage
+````
 
 ## USES CASES
-- [] Voir la liste  -  Cécile : retourne la visualisation en texte des fichiers
-exemple :
-``` 
-root
-    file1
-    dossier1
-        file2
-```
-- [] Ajouter - Piero
-- [] Supprimer - Timothée
-- [] Dupliquer - Piero
-- [] Déplacer des fichiers - Timothée
+- [X] Print a path structure  -  Cécile
+- [X] Add a child to a path - Piero
+- [X] Delete a child from a path - Timothée
+- [X] Duplicate a child from a path - Piero
+- [X] Move a file from a directory to another - Timothée
