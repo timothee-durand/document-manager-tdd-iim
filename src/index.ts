@@ -19,9 +19,9 @@ export class Folder implements Base {
     name : string;
     private children : Array<TextFile | Folder>;
 
-    constructor(name:string) {
+    constructor(name:string, children: Array<TextFile | Folder> = []) {
         this.name = name;
-        this.children = []
+        this.children = children
     }
 
     addChild(child: Folder | TextFile) : void {
@@ -62,31 +62,47 @@ export class DocumentManager {
         return [];
     }
 
-    addChild(path:string, childToAdd: Child) : Error | string {
-        const folderWhereAdd = this.getChild(path);
-        if(folderWhereAdd === undefined) {
-            throw new Error("Path is not valid");
-        }  
+    addChild(path:string, childToAdd: Child) : void {
+        const folderWhereAdd = this.getChild(path); 
         if(folderWhereAdd instanceof TextFile){
             throw new Error("Can't add child to a file");
         }
         folderWhereAdd.addChild(childToAdd)
-        if(path === "/"){     
-            return path+childToAdd?.name
-        }
-        return path +"/"+childToAdd?.name
+        
         
     }
 
-    delete(path:string) : void {
-        const folderPath = path.slice(0, path.lastIndexOf("/"));
-        const folder = this.getChild(folderPath);
-        if(folder instanceof TextFile){
-            this.root.deleteChild(folder.name);
+    duplicate(path:string) : void {
+        const child = this.getChild(path);
+        let newChild : Child;
+        if(child instanceof TextFile){
+            newChild = new TextFile(child.name+"-copie", child.content);
+        } else {
+            newChild = new Folder(child.name+"-copie", child.getChildren());
         }
-        if(folder instanceof Folder){
+        
+        const folderPath = this.extractFolderPath(path);
+        const folder = this.getChild(folderPath) as Folder;
+        folder.addChild(newChild);
+    }
+
+    move(filePath: string, newDirectoryPath: string) : void {
+        const child = this.getChild(filePath)
+        const oldChildDirectory = this.getChild(this.extractFolderPath(filePath)) as Folder
+        const newDirectory = this.getChild(newDirectoryPath)
+        if(!(newDirectory instanceof Folder)) {
+            throw new Error("The new path is not a folder")
+        }
+        newDirectory.addChild(child)
+        oldChildDirectory.deleteChild(child.name)
+    }
+
+    delete(path:string) : void {
+        const folderPath = this.extractFolderPath(path)
+        const child = this.getChild(folderPath);
+        if(child instanceof Folder){
             const childName = path.slice(path.lastIndexOf("/")+1);
-            folder.deleteChild(childName);
+            child.deleteChild(childName);
         }
     }
 
@@ -116,5 +132,9 @@ export class DocumentManager {
             throw new Error("File not found");
         }
         return result;
+    }
+
+    extractFolderPath(path: string) : string {
+        return path.slice(0, path.lastIndexOf("/"));
     }
 }
